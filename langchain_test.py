@@ -1,21 +1,17 @@
-# Can you create a main and a function in python that allow me to interact with my local ollama model ?
-# model : gemma 2 9b
-# language: python
+from langchain_ollama import ChatOllama
+from langchain_core.prompts import ChatPromptTemplate
 
-import llama_cpp
+llm = ChatOllama(
+    model="gemma2:9b",      # exactly the name you see in `ollama list`
+    temperature=0.2,
+    num_ctx=8192,           # matches your model’s context
+    # base_url="http://localhost:11434",  # change if Ollama runs elsewhere
+)
 
-def interact_with_gemma():
-  """Interacts with the local Gemma 2 9B model."""
-  model_path = "path/to/your/gemma_2_9b_model.bin"  # Replace with your model's path
-  llm = llama_cpp.Llama(model_path=model_path)
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a concise assistant."),
+    ("human", "{question}")
+])
 
-  while True:
-    user_input = input("You: ")
-    if user_input.lower() == "exit":
-      break
-
-    response = llm.generate_text(user_input, max_tokens=100)
-    print("Gemma:", response.strip())
-
-if __name__ == "__main__":
-  interact_with_gemma()
+chain = prompt | llm
+print(chain.invoke({"question": "Explain LoRA fine-tuning in 3 bullet points."}).content)
