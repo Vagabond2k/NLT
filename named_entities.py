@@ -1,6 +1,10 @@
 import spacy
 import json
 from spacy import displacy
+# TD-IDF matrix
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
 
 with open('corpus.json', 'r') as file:
     data = json.load(file)
@@ -17,10 +21,7 @@ for item in data:
 corpus = [item["corpus"] for item in data]
 titles = [item["title"] for item in data]  
 
-# TD-IDF matrix
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import pandas as pd
+
 
 # TF-IDF (tweak params as needed)
 vectorizer = TfidfVectorizer()

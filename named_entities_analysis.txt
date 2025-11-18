@@ -1,0 +1,871 @@
+Maplewood 30 39 GPE
+Amelia Carter 71 84 PERSON
+Golden Whisk 119 131 WORK_OF_ART
+annually 198 206 DATE
+the National Baking Association 210 241 ORG
+BakeCon 256 263 ORG
+Las Vegas 278 287 GPE
+October 26th 291 303 DATE
+Carter 359 365 PERSON
+the 'Cosmic Crunch' 383 402 ORG
+Carter 657 663 PERSON
+Sweet Surrender 909 924 PERSON
+2018 1042 1046 DATE
+Carter 1048 1054 PERSON
+Sweet Surrender 1198 1213 PERSON
+in doc:  Local Bakery Wins National Award for Innovative Doughnuts
+there were this many entities:  15
+The City Museum 0 15 ORG
+Friday, November 3rd 69 89 DATE
+Zenith City 160 171 GPE
+the decades 290 301 DATE
+David Miller 312 324 PERSON
+Benny 602 607 PERSON
+Fingers 609 616 PERSON
+Franklin 618 626 ORG
+Stella Nova 638 649 PERSON
+Liam O'Connell 678 692 PERSON
+Zenith City 749 760 GPE
+the 1920s 792 801 DATE
+the 1980s 831 840 DATE
+Zenith City 1081 1092 GPE
+in doc:  New Exhibit at City Museum Explores History of Local Music Scene
+there were this many entities:  14
+Zenith Innovations 0 18 ORG
+$10 million 123 134 MONEY
+Zenith Innovations 257 275 ORG
+Maya Sharma 292 303 PERSON
+Ethan Lee 312 321 PERSON
+2020 325 329 DATE
+AI-Med 461 467 ORG
+Sharma 686 692 NORP
+AI-Med 771 777 ORG
+Zenith Innovations 997 1015 ORG
+in doc:  Local Tech Startup Raises Millions in Funding
+there were this many entities:  10
+annual 4 10 DATE
+Fall Festival 11 24 EVENT
+Maplewood 28 37 GPE
+autumn 94 100 DATE
+Saturday, October 21st 104 126 DATE
+the Maplewood Community Association 155 190 ORG
+thousands 202 211 CARDINAL
+a day 250 255 DATE
+Children 329 337 PERSON
+The Fall Festival 822 839 WORK_OF_ART
+Sarah Thompson 910 924 PERSON
+the Maplewood Community Association 939 974 ORG
+in doc:  Annual Fall Festival Draws Thousands to Downtown Park
+there were this many entities:  12
+Elias Vance 9 20 PERSON
+Zenith City 36 47 GPE
+Bronze Award 82 94 PERSON
+the National Sculpture Competition 98 132 ORG
+Chicago 141 148 GPE
+September 15th 152 166 DATE
+Vance 168 173 PERSON
+'The Guardian 198 211 WORK_OF_ART
+hundreds 361 369 CARDINAL
+Vance 513 518 PERSON
+Vance 679 684 PERSON
+the National Art Gallery 718 742 ORG
+Washington D.C. 746 761 GPE
+one year 766 774 DATE
+in doc:  Local Artist Wins National Recognition for Sculpture
+there were this many entities:  14
+The Zenith Art Awards 0 21 ORG
+annually 28 36 DATE
+the Grand Gallery 40 57 FAC
+New Alexandria 61 75 GPE
+this year 98 107 DATE
+Amelia Sterling 160 175 ORG
+Marcus Thorne 189 202 PERSON
+Zenith Award 216 228 PERSON
+Anya Petrova 275 287 PERSON
+Petrova 343 350 GPE
+New Alexandria 469 483 GPE
+Petrova 486 493 GPE
+Academy of Fine Arts 525 545 ORG
+Aurora 549 555 PERSON
+the Grand Gallery 745 762 FAC
+the next three months 767 788 DATE
+The Zenith Art Awards 790 811 ORG
+in doc:  Local Artist Wins Prestigious Zenith Award
+there were this many entities:  17
+Ironclad Security Solutions 101 128 ORG
+Silicon Valley 147 161 LOC
+Sentinel 403 411 WORK_OF_ART
+Ironclad 570 578 PERSON
+Emily Chen 588 598 PERSON
+AI 683 685 GPE
+Fortune 500 823 834 WORK_OF_ART
+OmniCorp 867 875 ORG
+Global Bank 902 913 ORG
+Ironclad 916 924 ORG
+Sentinel 940 948 WORK_OF_ART
+the coming months 990 1007 DATE
+in doc:  Cybersecurity Firm 'Ironclad' Unveils New AI-Powered Threat Detection System
+there were this many entities:  12
+James Thompson 59 73 PERSON
+annual 121 127 DATE
+State of the City address 128 153 ORG
+Tuesday 157 164 DATE
+The 'Downtown Renaissance Project' 166 200 ORG
+Thompson 498 506 PERSON
+in doc:  Mayor Thompson Announces New Initiative to Revitalize Downtown District
+there were this many entities:  6
+six months 15 25 DATE
+the International Space Station 33 64 ORG
+Eva Rodriguez 90 103 PERSON
+Earth 116 121 LOC
+Thursday 125 133 DATE
+the Kennedy Space Center 153 177 FAC
+Florida 181 188 GPE
+Project Aurora 211 225 PERSON
+Rodriguez 380 389 PERSON
+Kenji Tanaka 421 433 PERSON
+Maria Sanchez 459 472 PERSON
+Rodriguez 792 801 PERSON
+in doc:  Astronaut Captain Eva Rodriguez Returns to Earth After Historic Mission
+there were this many entities:  12
+New York City 25 38 GPE
+last night 65 75 TIME
+Symphony of Souls' 133 151 WORK_OF_ART
+David Miller 212 224 PERSON
+Elias Vance 259 270 PERSON
+19th-century 363 375 DATE
+Parisian 376 384 NORP
+Tony Award-winning 419 437 PERSON
+Sarah Jones 446 457 PERSON
+Celeste 478 485 ORG
+Symphony of Souls' 758 776 ORG
+weeks 887 892 DATE
+in doc:  New Musical 'Symphony of Souls' Premieres at Grand Opera House
+there were this many entities:  12
+The Zenith Art Awards 0 21 ORG
+annually 28 36 DATE
+the Grand Gallery 40 57 FAC
+New Alexandria 61 75 GPE
+50th 92 96 ORDINAL
+last night 109 119 TIME
+Anya Petrova 206 218 PERSON
+Zenith Award 241 253 PERSON
+Petrova 316 323 GPE
+Academy of Fine Arts 355 375 ORG
+Veridia 379 386 GPE
+Forest 654 660 PERSON
+the Zenith Gallery 687 705 FAC
+New Alexandria 709 723 GPE
+a year 728 734 DATE
+Petrova 769 776 GPE
+The Zenith Art Awards 881 902 ORG
+in doc:  Local Artist Wins Prestigious Zenith Award
+there were this many entities:  17
+the city council 17 33 ORG
+last night 34 44 TIME
+Thomas Reed 52 63 PERSON
+Veridia 146 153 GPE
+SecureNet 311 320 ORG
+CyberGuard 325 335 ORG
+Reed 344 348 PERSON
+Veridia 434 441 ORG
+Cyber Shield 572 584 ORG
+Veridia 610 617 ORG
+SecureNet 932 941 ORG
+Emily Carter 947 959 PERSON
+Veridia 1044 1051 GPE
+in doc:  Mayor Announces New Initiative to Combat Cybercrime
+there were this many entities:  13
+Grandma 65 72 PERSON
+New Alexandria 108 122 GPE
+100th 139 144 ORDINAL
+Saturday 160 168 DATE
+Amelia Baker 181 193 PERSON
+1923 197 201 DATE
+the day 384 391 DATE
+Baker 633 638 PERSON
+Sarah Thompson 656 670 PERSON
+the past century 772 788 DATE
+Grandma 791 798 PERSON
+Grandma 1010 1017 PERSON
+in doc:  Local Bakery Celebrates 100th Anniversary
+there were this many entities:  12
+VSO 32 35 ORG
+2023-2024 season 69 85 DATE
+the Grand Concert Hall 116 138 FAC
+last week 139 148 DATE
+Maestro Alexander Petrov 297 321 PERSON
+Beethoven 698 707 ORG
+5 723 724 CARDINAL
+Mozart 726 732 PERSON
+Elena Ramirez 788 801 PERSON
+VSO 807 810 ORG
+Leonard Bernstein 870 887 PERSON
+Sarah Jones 916 927 PERSON
+Bernstein 988 997 PERSON
+VSO 1023 1026 ORG
+2023-2024 1029 1038 DATE
+the Grand Concert Hall 1065 1087 FAC
+in doc:  Veridia Symphony Orchestra Announces New Season
+there were this many entities:  16
+Aethel 73 79 PERSON
+Evelyn Wright 169 182 PERSON
+the University of Veridia 214 239 ORG
+Wright 398 404 PERSON
+4th 515 518 ORDINAL
+BCE 530 533 ORG
+the university's Institute of Ancient Languages 628 675 ORG
+Aethel 969 975 PERSON
+in doc:  New Research Sheds Light on Ancient Civilization
+there were this many entities:  8
+The Zenith Art Awards 0 21 ORG
+annually 28 36 DATE
+the Grand Gallery 40 57 FAC
+New Alexandria 61 75 GPE
+this year 98 107 DATE
+Elara Vance 166 177 PERSON
+Zenith Prize 215 227 WORK_OF_ART
+Vance 292 297 PERSON
+Maestro Lorenzo 383 398 PERSON
+Academy of Fine Arts 418 438 ORG
+Veridia 442 449 GPE
+Vance 717 722 ORG
+New Alexandria 833 847 GPE
+in doc:  Local Artist Wins Prestigious Zenith Award
+there were this many entities:  13
+annual 40 46 DATE
+Silicon Valley 69 83 LOC
+Ironclad 104 112 ORG
+Quantum Shield 173 187 ORG
+Anya Sharma 329 340 PERSON
+Quantum Shield 380 394 ORG
+Quantum Shield 532 546 ORG
+Sharma 637 643 PERSON
+Quantum Shield 798 812 ORG
+the end of the year 866 885 DATE
+in doc:  Cybersecurity Firm 'Ironclad' Unveils Revolutionary Encryption Protocol
+there were this many entities:  10
+the city council 35 51 ORG
+last night 52 62 TIME
+Thomas Thompson 70 85 PERSON
+Oakhaven 165 173 GPE
+Project Phoenix 197 212 ORG
+Thompson 359 367 PERSON
+Oakhaven 408 416 PERSON
+Project Phoenix 792 807 ORG
+next month 825 835 DATE
+in doc:  Mayor Thompson Proposes Bold Plan for City Revitalization
+there were this many entities:  9
+SpaceX 47 53 PERSON
+first 80 85 ORDINAL
+yesterday 115 124 DATE
+the Kennedy Space Center 130 154 FAC
+Florida 158 165 GPE
+Falcon Heavy 171 183 ORG
+Mars Base Alpha 259 274 PRODUCT
+first 280 285 ORDINAL
+the Red Planet 316 330 LOC
+Red Horizon 354 365 PERSON
+Earth 466 471 LOC
+SpaceX 473 479 PERSON
+Elon Musk 484 493 PERSON
+Mars Base Alpha 613 628 FAC
+12 667 669 CARDINAL
+approximately six months 750 774 DATE
+in doc:  SpaceX Successfully Launches First Interplanetary Cargo Mission
+there were this many entities:  16
+Sweet Surrender' 39 55 PERSON
+Maplewood 59 68 GPE
+National Baking Championship 93 121 ORG
+annually 145 153 DATE
+the Culinary Institute of America 157 190 ORG
+New York City 194 207 GPE
+Owner 274 279 ORG
+Amelia 295 301 GPE
+Carter 302 308 PERSON
+raspberry coulis 444 460 PERSON
+Carter 494 500 PERSON
+Sweet Surrender 557 572 PERSON
+Maplewood 605 614 GPE
+next week 766 775 DATE
+in doc:  Local Bakery 'Sweet Surrender' Wins National Baking Championship
+there were this many entities:  14
+Aurora Awards 11 24 PERSON
+last night 40 50 TIME
+the Grand Gallery 54 71 FAC
+New Alexandria 75 89 GPE
+Elara Vance 108 119 PERSON
+Golden Brush award 142 160 WORK_OF_ART
+Academy of Fine Arts 253 273 ORG
+Zenith City 277 288 GPE
+Vance 557 562 ORG
+The Aurora Awards 728 745 ORG
+1987 762 766 DATE
+Alistair Finch 794 808 ORG
+year 890 894 DATE
+Marcus Thorne 989 1002 PERSON
+Anya Petrova 1031 1043 PERSON
+Vance 1045 1050 PERSON
+in doc:  Local Artist Wins Prestigious Aurora Award
+there were this many entities:  16
+last night 20 30 TIME
+the New Haven City Council 32 58 ORG
+Aurora Solar Project 87 107 ORG
+10% 150 153 PERCENT
+Solara Energy 264 277 ORG
+over 50,000 308 319 CARDINAL
+New Haven 396 405 GPE
+Olivia Ramirez 419 433 PERSON
+The Aurora Solar Project 463 487 ORG
+Solara Energy 627 640 ORG
+Ethan Carter 645 657 PERSON
+New Haven 740 749 GPE
+the end of 2025 917 932 DATE
+10,000 984 990 CARDINAL
+hundreds 1045 1053 CARDINAL
+in doc:  New Haven City Council Approves Landmark Solar Project
+there were this many entities:  15
+Kepler City 0 11 GPE
+last night 70 80 TIME
+around 10:30 PM 165 180 TIME
+hundreds 197 205 CARDINAL
+the Kepler Observatory 312 334 FAC
+decades 441 448 DATE
+Amelia Chen 460 471 PERSON
+The Kepler City Council 798 821 ORG
+Thomas Lee 992 1002 PERSON
+in doc:  Mysterious Meteor Shower Illuminates Night Sky Over Kepler City
+there were this many entities:  9
+Sweet Surrender' 20 36 PERSON
+New Alexandria 40 54 GPE
+Isabella Rossi 180 194 PERSON
+months 245 251 DATE
+Rossi 470 475 PERSON
+years 970 975 DATE
+Sarah Thompson 1002 1016 PERSON
+Sweet Surrender 1019 1034 PERSON
+Rossi 1141 1146 PERSON
+Sweet Surrender 1328 1343 PERSON
+New Alexandria 1396 1410 GPE
+in doc:  Local Bakery Unveils Innovative Gluten-Free Menu
+there were this many entities:  11
+The Zenith City Symphony Orchestra 0 34 ORG
+ZCSO 36 40 ORG
+2024-2025 78 87 DATE
+ZCSO Music 408 418 ORG
+Maestro David Chen 428 446 PERSON
+season 458 464 DATE
+modern-day 570 580 DATE
+Beethoven 682 691 ORG
+5 707 708 CARDINAL
+Elena Ramirez 748 761 PERSON
+Alexander Petrov 813 829 PERSON
+Rachmaninoff 841 853 PERSON
+3 875 876 CARDINAL
+Anya Sharma 955 966 PERSON
+ZCSO 972 976 ORG
+Music in the Park' series 1009 1034 WORK_OF_ART
+Zenith City 1089 1100 GPE
+2024-2025 1118 1127 DATE
+ZCSO 1163 1167 ORG
+Grand Auditorium 1187 1203 FAC
+ZCSO 1289 1293 ORG
+in doc:  Zenith City Symphony Orchestra Announces New Season
+there were this many entities:  21
+The Zenith Art Awards 0 21 ORG
+annually 28 36 DATE
+the Grand Gallery 40 57 FAC
+New Alexandria 61 75 GPE
+this year 98 107 DATE
+Anya Petrova 158 170 PERSON
+Julian Blackwood 186 202 PERSON
+Zenith Award 216 228 PERSON
+Elias Vance 275 286 PERSON
+Vance 342 347 PERSON
+New Alexandria 440 454 GPE
+Academy of Fine Arts 520 540 ORG
+Veridia 544 551 GPE
+The Zenith Art Awards 802 823 ORG
+in doc:  Local Artist Wins Prestigious Zenith Award
+there were this many entities:  14
+the New Alexandria City Council 24 55 ORG
+Councilman David Chen 188 209 PERSON
+Amelia Ramirez 232 246 PERSON
+Councilman Chen 670 685 PERSON
+Ramirez 908 915 PERSON
+New Alexandria 991 1005 GPE
+the next five years 1074 1093 DATE
+in doc:  New Alexandria City Council Approves Green Initiative
+there were this many entities:  7
+Veridia University 25 43 ORG
+Eleanor Vance 138 151 PERSON
+AI 213 215 ORG
+Nature 349 355 WORK_OF_ART
+July 15th 360 369 DATE
+Vance 383 388 PERSON
+AI 419 421 GPE
+Cognito 517 524 PERSON
+Cognito 766 773 PERSON
+AI 809 811 GPE
+Vance 840 845 PERSON
+The Veridia University 1006 1028 ORG
+Cognito 1077 1084 PERSON
+in doc:  Veridia University Researchers Make Breakthrough in Artificial Intelligence
+there were this many entities:  13
+Sweet Surrender 52 67 PERSON
+New Alexandria 96 110 GPE
+50th 127 131 ORDINAL
+August 1st 147 157 DATE
+Martha Thompson 170 185 PERSON
+1973 189 193 DATE
+the years 314 323 DATE
+Sweet Surrender 325 340 PERSON
+Sweet Surrender 636 651 PERSON
+Martha Thompson 856 871 PERSON
+in doc:  Local Bakery Celebrates 50th Anniversary
+there were this many entities:  10
+The New Alexandria Symphony Orchestra 0 37 ORG
+season 160 166 DATE
+September 15th 180 194 DATE
+Beethoven 217 226 ORG
+5 249 250 CARDINAL
+Maestro Carlos Rodriguez 278 302 WORK_OF_ART
+the fall 317 325 DATE
+NASO 327 331 ORG
+Tchaikovsky 467 478 GPE
+Swan Lake Suite 481 496 WORK_OF_ART
+October 27th 500 512 DATE
+November 17th 573 586 DATE
+December 14th 642 655 DATE
+the Grand Concert Hall 792 814 FAC
+Maestro Rodriguez 827 844 PERSON
+in doc:  New Alexandria Symphony Orchestra Announces Fall Season
+there were this many entities:  15
+This is the TF-IDF style representation in a dataframe format
+                                                        000        10     100th        12      14th      15th  ...  yesterday     yield      york     young     zcso    zenith
+Local Bakery Wins National Award for Innovative...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+New Exhibit at City Museum Explores History of ...        0         0         0         0         0         0  ...          0         0         0         0        0  0.127267
+Local Tech Startup Raises Millions in Funding             0  0.068391         0         0         0         0  ...          0         0         0         0        0  0.143488
+Annual Fall Festival Draws Thousands to Downtow...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+Local Artist Wins National Recognition for Scul...        0         0         0         0         0  0.075623  ...          0         0         0         0        0  0.052887
+Local Artist Wins Prestigious Zenith Award                0         0         0         0         0         0  ...          0         0         0         0        0  0.172768
+Cybersecurity Firm 'Ironclad' Unveils New AI-Po...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+Mayor Thompson Announces New Initiative to Revi...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+Astronaut Captain Eva Rodriguez Returns to Eart...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+New Musical 'Symphony of Souls' Premieres at Gr...        0         0         0         0         0         0  ...          0         0  0.089272         0        0         0
+Local Artist Wins Prestigious Zenith Award                0         0         0         0         0         0  ...          0         0         0         0        0  0.218275
+Mayor Announces New Initiative to Combat Cyberc...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+Local Bakery Celebrates 100th Anniversary                 0         0  0.084839         0         0         0  ...          0         0         0         0        0         0
+Veridia Symphony Orchestra Announces New Season           0         0         0         0         0         0  ...          0         0         0         0        0         0
+New Research Sheds Light on Ancient Civilization          0         0         0         0         0         0  ...          0  0.083992         0         0        0         0
+Local Artist Wins Prestigious Zenith Award                0         0         0         0         0         0  ...          0         0         0  0.105434        0  0.180218
+Cybersecurity Firm 'Ironclad' Unveils Revolutio...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+Mayor Thompson Proposes Bold Plan for City Revi...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+SpaceX Successfully Launches First Interplaneta...        0         0         0  0.095058         0         0  ...   0.095058         0         0         0        0         0
+Local Bakery 'Sweet Surrender' Wins National Ba...        0         0         0         0         0         0  ...          0         0  0.105559         0        0         0
+Local Artist Wins Prestigious Aurora Award                0         0         0         0         0         0  ...          0         0         0         0        0  0.050837
+New Haven City Council Approves Landmark Solar ...  0.15745  0.128276         0         0         0         0  ...          0         0         0         0        0         0
+Mysterious Meteor Shower Illuminates Night Sky ...        0  0.055877         0         0         0         0  ...          0         0         0         0        0         0
+Local Bakery Unveils Innovative Gluten-Free Menu          0         0         0         0         0         0  ...          0         0         0         0        0         0
+Zenith City Symphony Orchestra Announces New Se...        0         0         0         0         0         0  ...          0         0         0         0  0.36703  0.083648
+Local Artist Wins Prestigious Zenith Award                0         0         0         0         0         0  ...          0         0         0         0        0  0.165258
+New Alexandria City Council Approves Green Init...        0         0         0         0         0         0  ...          0         0         0         0        0         0
+Veridia University Researchers Make Breakthroug...        0         0         0         0         0  0.069606  ...          0         0         0         0        0         0
+Local Bakery Celebrates 50th Anniversary                  0         0         0         0         0         0  ...          0         0         0         0        0         0
+New Alexandria Symphony Orchestra Announces Fal...        0         0         0         0  0.089488  0.072907  ...          0         0         0         0        0         0
+
+[30 rows x 1533 columns]
+Cosine similarity matrix:
+                                                    Local Bakery Wins National Award for Innovative Doughnuts  ...  New Alexandria Symphony Orchestra Announces Fall Season
+Local Bakery Wins National Award for Innovative...                                              1.000          ...                                              0.125      
+New Exhibit at City Museum Explores History of ...                                              0.161          ...                                              0.211      
+Local Tech Startup Raises Millions in Funding                                                   0.164          ...                                              0.098      
+Annual Fall Festival Draws Thousands to Downtow...                                              0.178          ...                                              0.178      
+Local Artist Wins National Recognition for Scul...                                              0.286          ...                                              0.154      
+Local Artist Wins Prestigious Zenith Award                                                      0.251          ...                                              0.169      
+Cybersecurity Firm 'Ironclad' Unveils New AI-Po...                                              0.114          ...                                              0.074      
+Mayor Thompson Announces New Initiative to Revi...                                              0.151          ...                                              0.140      
+Astronaut Captain Eva Rodriguez Returns to Eart...                                              0.122          ...                                              0.152      
+New Musical 'Symphony of Souls' Premieres at Gr...                                              0.183          ...                                              0.233      
+Local Artist Wins Prestigious Zenith Award                                                      0.236          ...                                              0.152      
+Mayor Announces New Initiative to Combat Cyberc...                                              0.142          ...                                              0.144      
+Local Bakery Celebrates 100th Anniversary                                                       0.229          ...                                              0.142      
+Veridia Symphony Orchestra Announces New Season                                                 0.137          ...                                              0.503      
+New Research Sheds Light on Ancient Civilization                                                0.147          ...                                              0.127      
+Local Artist Wins Prestigious Zenith Award                                                      0.223          ...                                              0.152      
+Cybersecurity Firm 'Ironclad' Unveils Revolutio...                                              0.086          ...                                              0.076      
+Mayor Thompson Proposes Bold Plan for City Revi...                                              0.124          ...                                              0.129      
+SpaceX Successfully Launches First Interplaneta...                                              0.107          ...                                              0.078      
+Local Bakery 'Sweet Surrender' Wins National Ba...                                              0.432          ...                                              0.118      
+Local Artist Wins Prestigious Aurora Award                                                      0.261          ...                                              0.135      
+New Haven City Council Approves Landmark Solar ...                                              0.152          ...                                              0.123      
+Mysterious Meteor Shower Illuminates Night Sky ...                                              0.143          ...                                              0.103      
+Local Bakery Unveils Innovative Gluten-Free Menu                                                0.202          ...                                              0.091      
+Zenith City Symphony Orchestra Announces New Se...                                              0.164          ...                                              0.462      
+Local Artist Wins Prestigious Zenith Award                                                      0.247          ...                                              0.159      
+New Alexandria City Council Approves Green Init...                                              0.122          ...                                              0.109      
+Veridia University Researchers Make Breakthroug...                                              0.142          ...                                              0.097      
+Local Bakery Celebrates 50th Anniversary                                                        0.257          ...                                              0.124      
+New Alexandria Symphony Orchestra Announces Fal...                                              0.125          ...                                              1.000      
+
+[30 rows x 30 columns]
+
+📰 Local Bakery Wins National Award for Innovative Doughnuts
+  - baking: 0.257
+  - the: 0.253
+  - carter: 0.238
+  - award: 0.224
+  - surrender: 0.178
+  - sweet: 0.178
+  - doughnut: 0.157
+  - dough: 0.157
+  - and: 0.147
+  - in: 0.135
+
+📰 New Exhibit at City Museum Explores History of Local Music Scene
+  - the: 0.378
+  - exhibit: 0.372
+  - music: 0.234
+  - of: 0.219
+  - city: 0.214
+  - echoes: 0.149
+  - harmony: 0.149
+  - zenith: 0.127
+  - scene: 0.121
+  - and: 0.119
+
+📰 Local Tech Startup Raises Millions in Funding
+  - innovations: 0.252
+  - healthcare: 0.225
+  - funding: 0.205
+  - the: 0.180
+  - venturex: 0.168
+  - med: 0.168
+  - investors: 0.168
+  - and: 0.157
+  - artificial: 0.150
+  - intelligence: 0.150
+
+📰 Annual Fall Festival Draws Thousands to Downtown Park
+  - festival: 0.386
+  - the: 0.310
+  - fall: 0.207
+  - maplewood: 0.189
+  - park: 0.189
+  - community: 0.185
+  - autumn: 0.154
+  - pumpkin: 0.154
+  - and: 0.145
+  - food: 0.138
+
+📰 Local Artist Wins National Recognition for Sculpture
+  - sculpture: 0.278
+  - vance: 0.247
+  - the: 0.223
+  - national: 0.210
+  - bronze: 0.186
+  - his: 0.167
+  - competition: 0.166
+  - recognition: 0.140
+  - my: 0.140
+  - artists: 0.140
+
+📰 Local Artist Wins Prestigious Zenith Award
+  - the: 0.378
+  - art: 0.254
+  - petrova: 0.229
+  - emerging: 0.180
+  - zenith: 0.173
+  - talent: 0.165
+  - to: 0.162
+  - her: 0.152
+  - awards: 0.143
+  - of: 0.135
+
+📰 Cybersecurity Firm 'Ironclad' Unveils New AI-Powered Threat Detection System
+  - sentinel: 0.351
+  - system: 0.235
+  - ironclad: 0.235
+  - threats: 0.215
+  - identify: 0.157
+  - security: 0.157
+  - in: 0.150
+  - ai: 0.143
+  - cybersecurity: 0.143
+  - of: 0.141
+
+📰 Mayor Thompson Announces New Initiative to Revitalize Downtown District
+  - downtown: 0.306
+  - project: 0.284
+  - the: 0.251
+  - and: 0.201
+  - residents: 0.199
+  - area: 0.188
+  - district: 0.167
+  - public: 0.142
+  - initiative: 0.142
+  - city: 0.135
+
+📰 Astronaut Captain Eva Rodriguez Returns to Earth After Historic Mission
+  - space: 0.321
+  - captain: 0.270
+  - rodriguez: 0.241
+  - the: 0.216
+  - contribute: 0.180
+  - her: 0.180
+  - of: 0.144
+  - and: 0.144
+  - on: 0.138
+  - human: 0.136
+
+📰 New Musical 'Symphony of Souls' Premieres at Grand Opera House
+  - the: 0.348
+  - set: 0.200
+  - souls: 0.200
+  - of: 0.187
+  - symphony: 0.151
+  - about: 0.141
+  - musical: 0.141
+  - and: 0.134
+  - technical: 0.100
+  - house: 0.100
+
+📰 Local Artist Wins Prestigious Zenith Award
+  - the: 0.358
+  - forest: 0.256
+  - zenith: 0.218
+  - petrova: 0.217
+  - her: 0.191
+  - award: 0.164
+  - whispers: 0.156
+  - of: 0.154
+  - artists: 0.145
+  - awards: 0.135
+
+📰 Mayor Announces New Initiative to Combat Cybercrime
+  - the: 0.257
+  - cyber: 0.233
+  - veridia: 0.220
+  - program: 0.185
+  - reed: 0.175
+  - digital: 0.175
+  - citizens: 0.175
+  - securenet: 0.175
+  - mayor: 0.174
+  - online: 0.156
+
+📰 Local Bakery Celebrates 100th Anniversary
+  - bakery: 0.360
+  - the: 0.318
+  - oven: 0.255
+  - grandma: 0.255
+  - anniversary: 0.207
+  - share: 0.170
+  - baker: 0.138
+  - celebration: 0.138
+  - and: 0.113
+  - of: 0.113
+
+📰 Veridia Symphony Orchestra Announces New Season
+  - season: 0.330
+  - vso: 0.262
+  - the: 0.234
+  - concert: 0.214
+  - 2023: 0.175
+  - bernstein: 0.175
+  - music: 0.165
+  - hall: 0.156
+  - guest: 0.156
+  - 2024: 0.156
+
+📰 New Research Sheds Light on Ancient Civilization
+  - the: 0.292
+  - ancient: 0.252
+  - of: 0.180
+  - civilization: 0.168
+  - tablets: 0.168
+  - aethel: 0.168
+  - region: 0.168
+  - wright: 0.168
+  - archaeological: 0.168
+  - university: 0.150
+
+📰 Local Artist Wins Prestigious Zenith Award
+  - the: 0.366
+  - her: 0.263
+  - prize: 0.211
+  - vance: 0.210
+  - zenith: 0.180
+  - artists: 0.159
+  - of: 0.141
+  - to: 0.141
+  - art: 0.133
+  - alexandria: 0.115
+
+📰 Cybersecurity Firm 'Ironclad' Unveils Revolutionary Encryption Protocol
+  - quantum: 0.461
+  - shield: 0.329
+  - ironclad: 0.247
+  - announcement: 0.164
+  - sharma: 0.150
+  - technology: 0.150
+  - cybersecurity: 0.150
+  - to: 0.148
+  - dr: 0.139
+  - the: 0.123
+
+📰 Mayor Thompson Proposes Bold Plan for City Revitalization
+  - project: 0.246
+  - the: 0.232
+  - oakhaven: 0.217
+  - phoenix: 0.217
+  - plan: 0.194
+  - while: 0.177
+  - about: 0.153
+  - council: 0.153
+  - mayor: 0.144
+  - thompson: 0.144
+
+📰 SpaceX Successfully Launches First Interplanetary Cargo Mission
+  - red: 0.285
+  - mission: 0.254
+  - the: 0.203
+  - base: 0.190
+  - mars: 0.190
+  - alpha: 0.190
+  - horizon: 0.190
+  - first: 0.190
+  - spacex: 0.190
+  - cargo: 0.190
+
+📰 Local Bakery 'Sweet Surrender' Wins National Baking Championship
+  - the: 0.285
+  - maplewood: 0.193
+  - sweet: 0.179
+  - surrender: 0.179
+  - carter: 0.179
+  - in: 0.169
+  - bakery: 0.167
+  - with: 0.119
+  - shock: 0.118
+  - cozy: 0.118
+
+📰 Local Artist Wins Prestigious Aurora Award
+  - the: 0.310
+  - vance: 0.237
+  - her: 0.223
+  - art: 0.168
+  - in: 0.153
+  - ceremony: 0.145
+  - this: 0.142
+  - aurora: 0.135
+  - recognition: 0.135
+  - arts: 0.126
+
+📰 New Haven City Council Approves Landmark Solar Project
+  - project: 0.357
+  - energy: 0.281
+  - the: 0.274
+  - solar: 0.211
+  - haven: 0.211
+  - council: 0.167
+  - solara: 0.157
+  - 000: 0.157
+  - jobs: 0.157
+  - new: 0.146
+
+📰 Mysterious Meteor Shower Illuminates Night Sky Over Kepler City
+  - shower: 0.274
+  - kepler: 0.274
+  - celestial: 0.274
+  - meteor: 0.274
+  - the: 0.257
+  - observatory: 0.206
+  - to: 0.147
+  - residents: 0.145
+  - anything: 0.137
+  - meteors: 0.137
+
+📰 Local Bakery Unveils Innovative Gluten-Free Menu
+  - gluten: 0.442
+  - free: 0.338
+  - menu: 0.252
+  - rossi: 0.189
+  - sweet: 0.143
+  - surrender: 0.143
+  - and: 0.135
+  - with: 0.127
+  - without: 0.126
+  - dietary: 0.126
+
+📰 Zenith City Symphony Orchestra Announces New Season
+  - season: 0.388
+  - zcso: 0.367
+  - the: 0.275
+  - music: 0.185
+  - orchestral: 0.147
+  - of: 0.137
+  - and: 0.137
+  - guest: 0.131
+  - performance: 0.131
+  - 2024: 0.131
+
+📰 Local Artist Wins Prestigious Zenith Award
+  - the: 0.388
+  - art: 0.243
+  - awards: 0.205
+  - vance: 0.193
+  - his: 0.173
+  - zenith: 0.165
+  - work: 0.137
+  - of: 0.129
+  - to: 0.129
+  - judges: 0.122
+
+📰 New Alexandria City Council Approves Green Initiative
+  - green: 0.349
+  - initiative: 0.264
+  - the: 0.257
+  - councilman: 0.175
+  - city: 0.168
+  - sustainable: 0.156
+  - decision: 0.156
+  - ramirez: 0.132
+  - chen: 0.132
+  - council: 0.123
+
+📰 Veridia University Researchers Make Breakthrough in Artificial Intelligence
+  - cognito: 0.256
+  - professor: 0.229
+  - ai: 0.209
+  - team: 0.181
+  - algorithm: 0.171
+  - systems: 0.171
+  - breakthrough: 0.171
+  - reasoning: 0.171
+  - vance: 0.170
+  - the: 0.160
+
+📰 Local Bakery Celebrates 50th Anniversary
+  - bakery: 0.257
+  - surrender: 0.206
+  - sweet: 0.206
+  - the: 0.195
+  - martha: 0.182
+  - generations: 0.148
+  - baked: 0.148
+  - anniversary: 0.148
+  - bread: 0.137
+  - become: 0.129
+
+📰 New Alexandria Symphony Orchestra Announces Fall Season
+  - season: 0.338
+  - naso: 0.268
+  - fall: 0.239
+  - concert: 0.219
+  - the: 0.215
+  - performance: 0.160
+  - rodriguez: 0.160
+  - orchestra: 0.146
+  - on: 0.138
+  - symphony: 0.135
