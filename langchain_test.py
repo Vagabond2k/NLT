@@ -2,10 +2,9 @@ from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 
 llm = ChatOllama(
-    model="gemma2:9b",      # exactly the name you see in `ollama list`
+    model="gemma2:9b", 
     temperature=0.2,
-    num_ctx=8192,           # matches your model’s context
-    # base_url="http://localhost:11434",  # change if Ollama runs elsewhere
+    num_ctx=8192,          
 )
 
 prompt = ChatPromptTemplate.from_messages([

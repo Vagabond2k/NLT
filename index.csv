@@ -1,0 +1,17 @@
+Variable Name,Description,Data Type / Range / Notes
+Patient_ID,Unique identifier for each synthetic patient.,"String (e.g., 'ALS_0001')"
+Age_at_Diagnosis,Patient's age (in years) at the time of ALS diagnosis.,"Integer, typically 40-85. Generated from N(60,82)."
+Weight_at_Diagnosis_kg,Patient's body weight (in kilograms) at diagnosis.,"Float (1 decimal place). Generated from N(75,122)."
+Smoker_Status,History of smoking.,"Integer (Binary: 1 = Smoker/Ex-smoker, 0 = Never smoker)."
+Gender,Patient's biological sex.,"Categorical (String: 'Male', 'Female')."
+Onset_Site,Initial location of symptom onset (Spinal vs. Bulbar).,"Categorical (String: 'Spinal', 'Bulbar'). Bulbar is often associated with a worse prognosis."
+Diagnostic_Delay_mo,Time (in months) from symptom onset to diagnosis.,"Integer, typically 3-20 months. Generated from N(12,42)."
+ALSFRS_R_Baseline,Baseline score on the ALS Functional Rating Scale-Revised.,Integer (Range: 0-48). Lower score indicates worse functional ability.
+FVC_Percent_Baseline,Baseline Forced Vital Capacity (a measure of lung function) as a percentage of predicted.,Float (1 decimal place). Range: 40-120%. A key prognostic factor.
+Riluzole_Use,Indicates if the patient is receiving Riluzole treatment.,"Integer (Binary: 1 = Yes, 0 = No)."
+C9orf72_Mutation,Presence of the common C9orf72 genetic mutation.,"Integer (Binary: 1 = Positive, 0 = Negative)."
+Cognitive_Impairment,"Presence of associated cognitive or behavioral impairment (e.g., ALSci, FTD).","Integer (Binary: 1 = Present, 0 = Absent)."
+Family_History,Indicates a family history of ALS.,"Integer (Binary: 1 = Positive, 0 = Negative). Most cases are sporadic."
+Region_of_Onset,Predominant motor neuron involvement at onset.,"Categorical (String: 'Upper', 'Lower', 'Both')."
+Creatinine_Level_umol_L,Creatinine blood level (in μmol/L).,"Float (1 decimal place). Marker of muscle mass/decline. Generated from N(80,152)."
+Survival_Time_mo,The total time (in months) the patient survived after diagnosis.,"Integer. Skewed distribution (Gamma, shape=2, scale=18) with a mean target of 36 months."
