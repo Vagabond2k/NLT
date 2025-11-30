@@ -1,10 +1,13 @@
 import pandas as pd
 import ollama
-
+import pandasai as pai
 from pandasai import Agent
 from pandasai.llm.base import LLM
 from pandasai.core.prompts.base import BasePrompt
-import ast
+import sys
+import atexit
+import os
+from prompt_toolkit import PromptSession
 
 
 class OllamaLLM(LLM):
@@ -33,28 +36,41 @@ class OllamaLLM(LLM):
         prompt = instruction.to_string()
         
         guard = """
-        IMPORTANT RULES (MUST FOLLOW ALL):
+        YOU ARE A PYTHON CODE GENERATOR FOR PANDASAI USING SQL + DUCKDB.
 
-        1. Never modify the original dataframe in-place.
-        - If the dataframe is named df, do NOT assign to df.
-        - Instead, write: df_work = df.copy()
-        2. Never reassign df to a filtered version.
-        - BAD:  df = df[df["smoker"] == 1]
-        - GOOD: df_work = df[df["smoker"] == 1]
-        3. Do not keep state in global variables across questions.
-        4. Always set the final answer in a variable named `result` as:
+        RULES (MUST FOLLOW ALL):
+
+        1. DO NOT modify any base tables (no CREATE, DROP, INSERT, UPDATE, DELETE).
+        - Only use SELECT queries.
+
+        2. Each question must be answered based on the full table,
+        unless the user explicitly asks for a filter (e.g. "only smokers").
+        Do NOT permanently restrict future queries.
+
+        3. If you need a subset, use SELECT with WHERE in the SQL query,
+        but do NOT assume future questions are restricted to that subset.
+
+        4. ALWAYS return the final answer via a variable named `result`:
         result = {"type": "<type>", "value": <value>}
-        5. Do NOT use print() for the final answer.
+        Never use print() for the final answer.
+
+        5. Do NOT change global Python variables that affect future questions.
         """
 
-        prompt = guard + "\n\n" + prompt
 
         if context is not None and getattr(context, "memory", None) is not None:
             prompt = self.prepend_system_prompt(prompt, context.memory)
+        # print("===== PROMPT SENT TO OLLAMA =====")
+        # print(prompt)
+        # print("=================================")
+
 
         response = self.client.chat(
             model=self.model,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": guard},
+                {"role": "user", "content": prompt},
+            ],
         )
 
         return response["message"]["content"]
@@ -87,17 +103,11 @@ agent = Agent(
     },
 )
 
-
-def is_python_code(s: str) -> bool:
-    try:
-        ast.parse(s)
-        return True
-    except SyntaxError:
-        return False
 # -------------------------
 # Query
 # -------------------------
-cimport sys
+
+
 
 class MyREPL:
     def __init__(self, agent):
@@ -106,6 +116,7 @@ class MyREPL:
             "__name__": "__repl__",
             "__builtins__": __builtins__,
         }
+        self.session = PromptSession() 
         self.agent = agent
 
     def is_python_code(self, expression: str) -> bool:
@@ -137,15 +148,19 @@ class MyREPL:
                 return eval(code, self.environment)
         else:
             # Non-Python -> forward to the agent
+            print("[DEBUG] calling agent.start_new_conversation()")
             self.agent.start_new_conversation()
-            return self.agent.chat(expression)
+            print("[DEBUG] calling agent.chat()")
+            result = self.agent.chat(expression)
+            print("[DEBUG] agent.chat() returned")
+            return result
 
     def run(self):
         print("My Custom REPL - type 'exit' or 'quit' (or Ctrl+D) to quit")
 
         while True:
             try:
-                user_input = input(">> ")
+                user_input = self.session.prompt(">> ") 
 
                 stripped = user_input.strip()
                 if not stripped:
@@ -155,7 +170,6 @@ class MyREPL:
                     break
 
                 result = self.evaluate(user_input)
-
                 if result is not None:
                     print(result)
 
@@ -163,11 +177,10 @@ class MyREPL:
                 print("\nExiting...")
                 break
             except Exception as e:
-                # Send errors to stderr so they’re visually distinct
-                print(f"Error: {type(e).__name__}: {e}", file=sys.stderr)
+                print(f"Error: {type(e).__name__}: {e}")
 
 
 if __name__ == "__main__":
-
+    # You’d pass your existing agent instance here
     repl = MyREPL(agent)
     repl.run()
