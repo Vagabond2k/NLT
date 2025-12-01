@@ -4,10 +4,10 @@ import pandasai as pai
 from pandasai import Agent
 from pandasai.llm.base import LLM
 from pandasai.core.prompts.base import BasePrompt
+from prompt_toolkit import PromptSession
 import sys
 import atexit
 import os
-from prompt_toolkit import PromptSession
 
 
 class OllamaLLM(LLM):
@@ -15,7 +15,7 @@ class OllamaLLM(LLM):
     Simple PandasAI-compatible LLM that talks to a local Ollama server.
     """
 
-    def __init__(self, model: str = "llama3.1:latest", host: str = "http://localhost:11434", **kwargs):
+    def __init__(self, model: str = "llama3.1:latest", host: str = "http://localhost:11434", debug = False,  **kwargs):
         # LLM base takes api_key + **kwargs, but we don't need an API key for Ollama
         super().__init__(api_key=None, **kwargs)
         self.model = model
@@ -25,6 +25,9 @@ class OllamaLLM(LLM):
     def type(self) -> str:
         # Just an identifier string for logging/metadata
         return "ollama"
+    
+    def set_debug(self, debug) -> bool:
+        self.debug = debug
 
     def call(self, instruction: BasePrompt, context=None) -> str:
         """
@@ -60,9 +63,10 @@ class OllamaLLM(LLM):
 
         if context is not None and getattr(context, "memory", None) is not None:
             prompt = self.prepend_system_prompt(prompt, context.memory)
-        # print("===== PROMPT SENT TO OLLAMA =====")
-        # print(prompt)
-        # print("=================================")
+        if self.debug == True:
+            print("===== PROMPT SENT TO OLLAMA =====")
+            print(prompt)
+            print("=================================")
 
 
         response = self.client.chat(
@@ -72,6 +76,10 @@ class OllamaLLM(LLM):
                 {"role": "user", "content": prompt},
             ],
         )
+        if self.debug == True:
+            print("\n=== RAW LLM → PandasAI RESPONSE ===")
+            print(response["message"]["content"])
+            print("===================================\n")
 
         return response["message"]["content"]
 
@@ -117,6 +125,7 @@ class MyREPL:
             "__builtins__": __builtins__,
         }
         self.session = PromptSession() 
+        self.debug = False
         self.agent = agent
 
     def is_python_code(self, expression: str) -> bool:
@@ -146,13 +155,20 @@ class MyREPL:
                 return None
             else:
                 return eval(code, self.environment)
+        elif expression.startswith("Set Debug"):
+            debug = expression.replace('Set Debug ', '', 1).strip()
+            self.debug = debug == 'True'
         else:
             # Non-Python -> forward to the agent
-            print("[DEBUG] calling agent.start_new_conversation()")
+            if self.debug:
+                print("[DEBUG] calling agent.start_new_conversation()")
+            local_llm.set_debug(self.debug)
             self.agent.start_new_conversation()
-            print("[DEBUG] calling agent.chat()")
+            if self.debug:
+                print("[DEBUG] calling agent.chat()")
             result = self.agent.chat(expression)
-            print("[DEBUG] agent.chat() returned")
+            if self.debug:
+                print("[DEBUG] agent.chat() returned")
             return result
 
     def run(self):

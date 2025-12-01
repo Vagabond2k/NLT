@@ -4,6 +4,7 @@ pip install -r requirements.txt
 #Part 1
 python3 langchain_test.py
 #Part 2 
+python3 random_corpus.py 
 python3 named_entities.py
 #Part 3 
 python3 repl_corpus.py
