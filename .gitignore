@@ -1,3 +1,6 @@
 venv/
 venv3/
 venv311/
+data*
+chroma*
+*.log
