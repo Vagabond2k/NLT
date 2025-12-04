@@ -20,6 +20,14 @@ from prompt_toolkit import PromptSession
 from langchain_core.callbacks import BaseCallbackHandler
 from pydantic import PrivateAttr
 import duckdb
+from pydantic import BaseModel
+from langchain.agents.structured_output import ToolStrategy
+
+class PlannerResult(BaseModel):
+    can_answer: bool
+    reason: str
+    sql: Optional[str]
+    columns_used: List[str]
 
 # 1. Read data CSV with pandas
 df_data = pd.read_csv("patients.csv")
@@ -122,29 +130,32 @@ schema_store.add_texts(
 @tool(response_format="content_and_artifact")
 def retrieve_context(query: Optional[str] = None):
     """
-    Return the most relevant schema information for the clinical-trial data.
+    Return schema information for the clinical-trial `patients` table.
 
-    If `query` is not provided, default to retrieving the schema
-    for the `patients` table.
+    If `query` is None, return a broad schema overview.
+    Otherwise, use `query` to focus retrieval but still include multiple fields.
     """
-    # Default query if the model doesn't pass anything
     if not query:
-        query = "schema of patients table"
-
-    retrieved_docs = schema_store.similarity_search(query, k=2)
+        # Broad schema query – ask for overall schema and fetch many vars
+        retrieved_docs = schema_store.similarity_search(
+            "schema of patients table", k=50
+        )
+    else:
+        retrieved_docs = schema_store.similarity_search(query, k=3)
 
     serialized = "\n\n".join(
-        f"Source: {doc.metadata.get('source', 'unknown')}\nContent: {doc.page_content}"
+        f"Variable: {doc.metadata.get('variable_name', 'UNKNOWN')}\n"
+        f"Description: {doc.metadata.get('description', '')}\n"
+        f"Data type / notes: {doc.metadata.get('data_type_notes', '')}"
         for doc in retrieved_docs
     )
 
-    # `serialized` is what the model will see, `retrieved_docs` is kept as artifact
     return serialized, retrieved_docs
 
-@tool(response_format="content_and_artifact")
+
 def run_sql(query: str):
     """
-    Execute SQL query against Data in DuckDB
+    Execute SQL query against data in DuckDB.
     """
     con = duckdb.connect("data.duckdb")
     try:
@@ -153,96 +164,175 @@ def run_sql(query: str):
             if df.shape == (1, 1):
                 col = df.columns[0]
                 value = df.iloc[0, 0]
-                content = f"Query result: {col} = {value}"
+                content = f"SUCCESS: Query result: {col} = {value}"
             else:
-                content = f"Query returned {len(df)} rows:\n{df.to_string(index=False)}"
+                content = f"SUCCESS: Query returned {len(df)} rows:\n{df.to_string(index=False)}"
         else:
-            content = "Query returned no results."
+            content = "SUCCESS: Query returned no results."
     except Exception as e:
-        content = f"SQL execution failed: {e}"
+        content = (
+            f"ERROR: SQL execution failed with error: {e}. "
+            "You MUST NOT answer the user's question with a numeric result. "
+            "Instead, respond exactly with: \"I don't know based on the provided context.\""
+        )
         df = None
     finally:
         con.close()
+
     return content, df
 
+PLANNER_SYSTEM_PROMPT = """
+You are an analytical SQL planner for a clinical-trial database.
+
+You NEVER talk to the end-user. Your output is consumed by another system.
+You NEVER execute SQL. You ONLY design SQL queries and explain whether a
+question can be answered from the data.
+
+DATABASE:
+
+- There is a single table: patients
+- Column names and descriptions are defined by the schema.
+- You can access the schema using the tool `retrieve_context`.
+- You MUST treat the schema as the ONLY source of truth about columns and
+  allowed categorical values.
+
+TOOLS YOU MUST USE:
+
+- retrieve_context(query: Optional[str] = None)
+  - Use this to inspect the schema of the patients table.
+  - If you need the overall schema, call it with no arguments
+
+RULES:
+
+1. Before deciding on SQL, you MUST call `retrieve_context` at least once to
+   see the relevant part of the schema. 
+   Very important Wait until this tool returned data to you
+
+2. You MUST only use column names that appear EXACTLY in the schema output.
+   If a column does not appear there, it DOES NOT exist.
+
+3. For categorical fields, you MUST use the allowed values exactly as given
+   in the schema (including capitalization and spelling).
+   Example:
+     If the schema says:
+       Gender,Patient's biological sex.,"Categorical (String: 'Male', 'Female')."
+     then valid filters include:
+       Gender = 'Male'
+       Gender = 'Female'
+     and you MUST wrap the values in single quotes.
+
+4. You MUST design SQL that uses only the `patients` table.
+
+5. Do NOT try to execute SQL. Do NOT guess numeric results. Do NOT add
+   medical or domain knowledge. You are ONLY planning.
+
+YOUR TASK:
+
+Given a single user question in natural language:
+
+1. Think step-by-step (internally) about:
+   - What the user is asking.
+   - Which columns are needed -> invoke the tool here
+   - Which filters / WHERE clauses are needed.
+   - Whether the question is actually answerable from the schema.
+
+2. If the question is answerable with a SELECT query, construct a SINGLE
+   SQL query that would answer it.
+
+3. If it is not answerable (e.g., required field not in schema, encoding
+   ambiguous, etc.), mark it as not answerable.
+
+FINAL OUTPUT FORMAT (VERY IMPORTANT):
+
+You MUST output a single JSON object, and NOTHING else, with the keys:
+
+- can_answer: boolean
+- reason: short string explaining your decision
+- sql: string or null
+- columns_used: array of strings with the column names you used
+
+Examples:
+
+User question:
+  "What’s the average survival time for male ?"
+
+Possible output:
+{
+  "can_answer": true,
+  "reason": "reason.",
+  "sql": "query",
+  "columns_used": ["example_column_1", "example_column_2"]
+}
+
+If the question cannot be answered from the schema, use:
+{
+  "can_answer": false,
+  "reason": "No column in the schema encodes the requested concept.",
+  "sql": null,
+  "columns_used": []
+}
+
+Do NOT include explanations outside of this JSON object.
+Do NOT talk to the end-user.
+Do NOT fabricate numeric answers.
+""" 
 
 
-SYSTEM_PROMPT = """
-You are a question-answering assistant for clinical-trial data.
+EXECUTOR_PROMPT = """
+You are a concise answering assistant for clinical-trial data.
+Thought: you should always think about what to do, do not use any tool if it is not needed. 
+If you are about to call a tool but you could reasonably answer without it,
+do NOT call the tool. Just answer directly.
 
-You have access to two tools:
+YOU RECEIVE (as input messages):
 
-1. retrieve_context: returns the FULL AND ONLY schema of the database.
-2. run_sql: executes SQL queries using EXACTLY the fields from the schema.
+- The user's original question.
+- The SQL query that was executed.
+- A brief schema description of the columns involved (optional).
+- The result of the SQL query in textual form.
 
-The database table name is ALWAYS patients.
+YOUR JOB:
 
-INTERACTION PROTOCOL (CRITICAL):
+- Answer the user's question in clear natural language.
+- Base your answer ONLY on:
+  - the SQL result
+  - and any provided schema description
+- You MUST NOT use outside medical knowledge or assumptions about ALS.
+- If the SQL result does not contain enough information to answer the
+  question, you MUST reply exactly with:
+    "I don't know based on the provided context."
 
-There are exactly THREE stages. Decide which stage you are in by looking at the conversation:
+RULES:
 
-STAGE 1 — ONLY retrieve_context:
-- Condition: There is NO tool output from retrieve_context in the conversation yet.
-- Your response in this stage MUST be:
-  - a SINGLE tool call to retrieve_context
-  - with NO natural-language text.
+1. NEVER invent or guess numbers. If a numeric value is needed, use ONLY
+   the number(s) present in the SQL result text.
 
-STAGE 2 — ONLY run_sql:
-- Condition: There IS tool output from retrieve_context,
-            but there is NO tool output from run_sql yet.
-- In this stage you MUST:
-  - read the schema from retrieve_context
-  - construct an appropriate SQL query using ONLY the schema fields
-  - respond with a SINGLE tool call to run_sql including that SQL
-  - and NO other text (no explanation, no comments).
+2. Do NOT show or explain the SQL unless the user explicitly asks for it.
+   Focus on a user-friendly summary.
 
-STAGE 3 — FINAL ANSWER (NO MORE TOOLS):
-- Condition: There IS tool output from run_sql in the conversation.
-- In this stage you MUST:
-  - NOT call any more tools
-  - NOT output SQL queries as your answer
-  - read and interpret the outputs of retrieve_context and run_sql
-  - produce a clear natural-language answer for the user.
+3. Keep answers short and to the point unless the question clearly asks
+   for a detailed explanation.
 
-TOOL / SCHEMA RULES (MUST FOLLOW, NO EXCEPTIONS):
-
-1. Use the schema from retrieve_context as the ONLY source of field names.
-   - If a field does not appear in the schema EXACTLY as written, then it DOES NOT EXIST.
-
-2. When translating the user request into SQL, you MUST:
-   - Use ONLY the exact field names returned by retrieve_context.
-   - NEVER invent, rename, pluralize, simplify, or infer field names.
-   - Example: If the schema contains Survival_Time_mo, you MUST NOT replace it with survival_time, survival, or any other variation.
-
-3. You MUST use the patients table in all queries.
-
-4. Your final answer MUST be based ONLY on:
-   - the schema from retrieve_context
-   - the result of run_sql.
-
-5. If the user's question refers to a concept that does NOT map directly and EXACTLY to fields in the schema, you MUST answer:
+4. If the input indicates an error executing SQL, or if the planner marked
+   the question as not answerable, you MUST reply:
    "I don't know based on the provided context."
 
-6. ABSOLUTELY FORBIDDEN:
-   - inventing column names
-   - guessing which field “probably corresponds”
-   - using external medical knowledge
-   - answering the question without successful SQL execution
-   - performing any mutating action
+EXAMPLES:
 
-OUTPUT STYLE FOR FINAL ANSWERS (STAGE 3):
+If you see:
+- Question: "What’s the average survival time for male ?"
+- SQL result: "avg(Survival_Time_mo) = 35.22"
 
-- NEVER return a bare SQL query as the final answer.
-- Do NOT show the SQL query unless the user explicitly asks for it.
-- When run_sql returns a table with a single numeric value, you MUST:
-  - copy that value EXACTLY
-  - express it clearly in words.
-  Example:
-    If run_sql returns a single row with avg(Survival_Time_mo) = 35.9,
-    you should answer: "The average survival time is 35.9 months based on the provided data."
-- Do NOT convert units. Use the units given in the schema or data.
-- If the result is empty or not sufficient to answer, say:
+Then you should answer:
+  "The average survival time for male patients is 35.22 months based on the provided data."
+
+If you see:
+- Planner: can_answer = false
+- or SQL result indicates an error or missing data
+
+Then you should answer:
   "I don't know based on the provided context."
+
 """
 
 debug_handler = DebugHandler(enabled=False)
@@ -253,8 +343,8 @@ chat_model = ChatOllama(
     temperature=0.0,
 )
 
-tools = [retrieve_context, run_sql]
-agent = create_agent(chat_model, tools=tools)
+tools = [retrieve_context]
+agent = create_agent(chat_model, tools=tools, response_format=ToolStrategy(PlannerResult),)
 
 
 # --- Use the agent -----------------------------------------------------------
@@ -303,23 +393,59 @@ class MyREPL:
         else:
             # Non-Python -> forward to the agent (non-streaming)
             if self.debug:
-                print("[DEBUG] calling agent.invoke()")
-            result = agent.invoke(
+                print("[DEBUG] calling for planner agent.invoke()")
+            plan = agent.invoke(
                 {
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "system", "content": PLANNER_SYSTEM_PROMPT},
                         {"role": "user", "content": expression},
                     ]
                 },
                 config={"callbacks": [debug_handler]},
             )
+            response = plan["structured_response"]
+            
+            if not response.can_answer:
+                return "I don't know based on the provided context."
+
+            sql = response.sql
+            content, df  = run_sql(sql)
+            if df.shape != (1, 1):
+                sql_result_text = f"Query returned {len(df)} rows:\n{df.to_string(index=False)}"
+            else:
+                col = df.columns[0]
+                value = df.iloc[0, 0]
+                sql_result_text = f"{col} = {value}"
+            
+            executor_result = agent.invoke(
+                {
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": EXECUTOR_PROMPT
+                        },
+                        {
+                            "role": "user",
+                            "content": (
+                                f"USER QUESTION:\n{expression}\n\n"
+                                f"SQL EXECUTED:\n{sql}\n\n"
+                                f"SQL RESULT:\n{sql_result_text}\n"
+                            )
+                        },
+                    ], 
+                },
+                config={"callbacks": [debug_handler]},
+            )
+
+
+
             # `result` is usually a dict with "messages" when using create_agent
-            messages = result.get("messages", [])
+            messages = executor_result.get("messages", [])
             if messages:
                 last_msg = messages[-1]
                 text = getattr(last_msg, "content", str(last_msg))
             else:
-                text = str(result)
+                text = str(executor_result)
             if self.debug:
                 print("[DEBUG] agent.invoke() returned")
             return text
