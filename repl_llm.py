@@ -2,6 +2,7 @@ import atexit
 import asyncio
 import os
 import sys
+import json
 from typing import Any, List, Optional
 from uuid import uuid4
 
@@ -21,7 +22,7 @@ from langchain_core.callbacks import BaseCallbackHandler
 from pydantic import PrivateAttr
 import duckdb
 from pydantic import BaseModel
-from langchain.agents.structured_output import ToolStrategy
+
 
 class PlannerResult(BaseModel):
     can_answer: bool
@@ -128,21 +129,15 @@ schema_store.add_texts(
 
 # --- Tool: same retrieval as minimal, but wrapped for the agent -------------
 @tool(response_format="content_and_artifact")
-def retrieve_context(query: Optional[str] = None):
+def retrieve_context():
     """
     Return schema information for the clinical-trial `patients` table.
-
-    If `query` is None, return a broad schema overview.
-    Otherwise, use `query` to focus retrieval but still include multiple fields.
     """
-    if not query:
-        # Broad schema query – ask for overall schema and fetch many vars
-        retrieved_docs = schema_store.similarity_search(
-            "schema of patients table", k=50
-        )
-    else:
-        retrieved_docs = schema_store.similarity_search(query, k=3)
-
+    # Broad schema query – ask for overall schema and fetch many vars
+    retrieved_docs = schema_store.similarity_search(
+        "schema of patients table", k=50
+    )
+    
     serialized = "\n\n".join(
         f"Variable: {doc.metadata.get('variable_name', 'UNKNOWN')}\n"
         f"Description: {doc.metadata.get('description', '')}\n"
@@ -152,7 +147,7 @@ def retrieve_context(query: Optional[str] = None):
 
     return serialized, retrieved_docs
 
-
+@tool(response_format="content_and_artifact")
 def run_sql(query: str):
     """
     Execute SQL query against data in DuckDB.
@@ -198,9 +193,8 @@ DATABASE:
 
 TOOLS YOU MUST USE:
 
-- retrieve_context(query: Optional[str] = None)
+- retrieve_context()
   - Use this to inspect the schema of the patients table.
-  - If you need the overall schema, call it with no arguments
 
 RULES:
 
@@ -287,12 +281,13 @@ do NOT call the tool. Just answer directly.
 YOU RECEIVE (as input messages):
 
 - The user's original question.
-- The SQL query that was executed.
+- The SQL query that need to be executed through run_sql tool
 - A brief schema description of the columns involved (optional).
-- The result of the SQL query in textual form.
+
 
 YOUR JOB:
 
+- Run run_sql tool {query}
 - Answer the user's question in clear natural language.
 - Base your answer ONLY on:
   - the SQL result
@@ -321,10 +316,9 @@ EXAMPLES:
 
 If you see:
 - Question: "What’s the average survival time for male ?"
-- SQL result: "avg(Survival_Time_mo) = 35.22"
 
 Then you should answer:
-  "The average survival time for male patients is 35.22 months based on the provided data."
+  "The average survival time for male patients is n months based on the provided data."
 
 If you see:
 - Planner: can_answer = false
@@ -338,13 +332,13 @@ Then you should answer:
 debug_handler = DebugHandler(enabled=False)
 
 chat_model = ChatOllama(
-    model="llama3.1",           # or "llama3.1:latest"
+    model="qwen3:4b-instruct",           # or "llama3.1:latest"
     base_url="http://localhost:11434",
     temperature=0.0,
 )
 
-tools = [retrieve_context]
-agent = create_agent(chat_model, tools=tools, response_format=ToolStrategy(PlannerResult),)
+tools = [retrieve_context, run_sql]
+agent = create_agent(chat_model, tools=tools)
 
 
 # --- Use the agent -----------------------------------------------------------
@@ -403,33 +397,22 @@ class MyREPL:
                 },
                 config={"callbacks": [debug_handler]},
             )
-            response = plan["structured_response"]
-            
-            if not response.can_answer:
+            planner_reply = json.loads([m for m in plan["messages"] if m.__class__.__name__ == "AIMessage"][-1].content)
+  
+            if not planner_reply['can_answer']:
                 return "I don't know based on the provided context."
 
-            sql = response.sql
-            content, df  = run_sql(sql)
-            if df.shape != (1, 1):
-                sql_result_text = f"Query returned {len(df)} rows:\n{df.to_string(index=False)}"
-            else:
-                col = df.columns[0]
-                value = df.iloc[0, 0]
-                sql_result_text = f"{col} = {value}"
-            
             executor_result = agent.invoke(
                 {
                     "messages": [
                         {
                             "role": "system",
-                            "content": EXECUTOR_PROMPT
+                            "content": EXECUTOR_PROMPT.replace("{query}", planner_reply['sql'])
                         },
                         {
                             "role": "user",
                             "content": (
                                 f"USER QUESTION:\n{expression}\n\n"
-                                f"SQL EXECUTED:\n{sql}\n\n"
-                                f"SQL RESULT:\n{sql_result_text}\n"
                             )
                         },
                     ], 
