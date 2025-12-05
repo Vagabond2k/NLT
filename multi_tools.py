@@ -1,5 +1,6 @@
 import duckdb
 import pandas as pd
+import random
 from typing import List, Optional
 
 from langchain.tools import tool
@@ -7,6 +8,7 @@ from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain.agents import create_agent
 from langchain_core.callbacks import BaseCallbackHandler
+from langgraph.checkpoint.memory import InMemorySaver
 
 
 # ---------------------------------------------------------------------------
@@ -294,6 +296,8 @@ GENERAL RULES:
 # 4. LLM + create_agent
 # ---------------------------------------------------------------------------
 
+checkpointer = InMemorySaver()
+
 llm = ChatOllama(
     model="qwen3:4b-instruct",
     base_url="http://localhost:11434",
@@ -314,9 +318,10 @@ agent = create_agent(
     model=llm,
     tools=tools,
     system_prompt=SYSTEM_PROMPT,
+    checkpointer=checkpointer
 )
 
-
+thread_id = f"planner-{random.random()}"
 # ---------------------------------------------------------------------------
 # 5. CLI with debug toggle
 # ---------------------------------------------------------------------------
@@ -344,7 +349,12 @@ def main():
 
             result = agent.invoke(
                 {"messages": [{"role": "user", "content": q}]},
-                config={"callbacks": [debug_handler]},
+                config={
+                    "callbacks": [debug_handler],
+                    "configurable": {              
+                        "thread_id": thread_id,
+                    },
+                },
             )
 
             messages = result.get("messages", [])

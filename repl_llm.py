@@ -6,6 +6,7 @@ import json
 from typing import Any, List, Optional
 from uuid import uuid4
 import pprint
+import random
 
 import ollama
 import pandas as pd
@@ -24,6 +25,7 @@ from pydantic import PrivateAttr
 import duckdb
 from pydantic import BaseModel
 from langchain.agents.middleware import AgentMiddleware, AgentState, SummarizationMiddleware
+from langgraph.checkpoint.memory import InMemorySaver
 
 
 class State(AgentState):
@@ -34,19 +36,22 @@ class RetrieveDocumentsMiddleware(AgentMiddleware[State]):
 
     def before_model(self, state: AgentState) -> dict[str, Any] | None:
         last_message = state["messages"][-1]
-        retrieved_docs = schema_store.similarity_search(last_message.text)
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print(last_message)
+        print("##############################")
+        #retrieved_docs = schema_store.similarity_search(last_message.text)
 
-        docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
+        #docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
 
-        augmented_message_content = (
-            f"{last_message.text}\n\n"
-            "Use the following context to answer the query:\n"
-            f"{docs_content}"
-        )
-        return {
-            "messages": [last_message.model_copy(update={"content": augmented_message_content})],
-            "context": retrieved_docs,
-        }
+        #augmented_message_content = (
+        #    f"{last_message.text}\n\n"
+        #    "Use the following context to answer the query:\n"
+        #    f"{docs_content}"
+        #)
+        #return {
+        #    "messages": [last_message.model_copy(update={"content": augmented_message_content})],
+        #    "context": retrieved_docs,
+        #}
 
 
 class PlannerResult(BaseModel):
@@ -66,7 +71,7 @@ con = duckdb.connect("data.duckdb")  # this is independent of Chroma
 con.execute("DROP TABLE IF EXISTS patients")
 con.execute("CREATE TABLE IF NOT EXISTS patients AS SELECT * FROM df_data")
 
-
+# not used as of now as was detrimental the llm was like ok I only work on those 10 lines
 df = con.execute("SELECT * FROM patients LIMIT 10").fetchdf()
 csv_string = df.to_csv(index=False)  # no index column
 
@@ -194,11 +199,16 @@ def retrieve_context():
 
 @tool("python_calc", return_direct=False)
 def python_calc(expression: str) -> str:
-    """Evaluate math problem using numpy in a restricted Python
-    environment. Use this only for numeric post-processing of tool results."""
-    safe_globals = {"__builtins__": {}}
+    """Evaluate a numeric expression using numpy as np in a restricted environment."""
+    import numpy as np
+
+    safe_globals = {
+        "__builtins__": {},
+        "np": np,
+    }
     try:
-        res = eval("import numpy as np" + expression, safe_globals, {})
+        # Eval ONLY expressions, no statements
+        res = eval(expression, safe_globals, {})
         return str(res)
     except Exception as e:
         return f"ERROR: {e}"
@@ -389,6 +399,7 @@ Then you should answer:
   "I don't know based on the provided context."
 
 """
+checkpointer = InMemorySaver()
 
 debug_handler = DebugHandler(enabled=False)
 
@@ -399,9 +410,14 @@ chat_model = ChatOllama(
 )
 
 tools = [retrieve_context, run_sql, python_calc]
-agent = create_agent(chat_model, tools=tools, middleware=[])
+agent = create_agent(
+    chat_model, 
+    tools=tools, 
+    middleware=[RetrieveDocumentsMiddleware()],
+    checkpointer=checkpointer
+    )
 
-
+thread_id = f"planner-{random.random()}"
 # --- Use the agent -----------------------------------------------------------
 class MyREPL:
     def __init__(self, agent):
@@ -456,7 +472,13 @@ class MyREPL:
                         {"role": "user", "content": expression},
                     ]
                 },
-                config={"callbacks": [debug_handler]},
+                config={
+                    "callbacks": [debug_handler],
+                    "configurable": {              
+                        "thread_id": thread_id,
+                    },
+                },
+                
             )
             planner_reply = json.loads([m for m in plan["messages"] if m.__class__.__name__ == "AIMessage"][-1].content)
   
@@ -478,7 +500,12 @@ class MyREPL:
                         },
                     ], 
                 },
-                config={"callbacks": [debug_handler]},
+                config={
+                    "callbacks": [debug_handler],
+                    "configurable": {              
+                        "thread_id": thread_id,
+                    },
+                },
             )
 
 
