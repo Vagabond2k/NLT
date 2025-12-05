@@ -5,6 +5,7 @@ import sys
 import json
 from typing import Any, List, Optional
 from uuid import uuid4
+import pprint
 
 import ollama
 import pandas as pd
@@ -22,6 +23,30 @@ from langchain_core.callbacks import BaseCallbackHandler
 from pydantic import PrivateAttr
 import duckdb
 from pydantic import BaseModel
+from langchain.agents.middleware import AgentMiddleware, AgentState, SummarizationMiddleware
+
+
+class State(AgentState):
+    context: list[Document]
+
+class RetrieveDocumentsMiddleware(AgentMiddleware[State]):
+    state_schema = State
+
+    def before_model(self, state: AgentState) -> dict[str, Any] | None:
+        last_message = state["messages"][-1]
+        retrieved_docs = schema_store.similarity_search(last_message.text)
+
+        docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
+
+        augmented_message_content = (
+            f"{last_message.text}\n\n"
+            "Use the following context to answer the query:\n"
+            f"{docs_content}"
+        )
+        return {
+            "messages": [last_message.model_copy(update={"content": augmented_message_content})],
+            "context": retrieved_docs,
+        }
 
 
 class PlannerResult(BaseModel):
@@ -40,6 +65,11 @@ con = duckdb.connect("data.duckdb")  # this is independent of Chroma
 
 con.execute("DROP TABLE IF EXISTS patients")
 con.execute("CREATE TABLE IF NOT EXISTS patients AS SELECT * FROM df_data")
+
+
+df = con.execute("SELECT * FROM patients LIMIT 10").fetchdf()
+csv_string = df.to_csv(index=False)  # no index column
+
 
 df_defintion = pd.read_csv("index.csv")
 
@@ -83,43 +113,58 @@ schema_store = Chroma(
 
 
 class DebugHandler(BaseCallbackHandler):
-    def __init__(self, enabled=False):
+    def __init__(self, enabled: bool = False):
         self.enabled = enabled
+        self._tokens = []
 
     def set_enabled(self, enabled: bool):
         self.enabled = enabled
 
-    # Called when LLM is invoked
+    def _is_enabled(self) -> bool:
+        return bool(self.enabled)
+
     def on_llm_start(self, serialized, prompts, **kwargs):
-        if self.enabled:
-            print("=== LLM START ===")
-            print(prompts)
-            print("=================")
+        if not self._is_enabled():
+            return
+        print("=== LLM START ===")
+        pprint.pp(prompts)
+        print("=================")
+        self._tokens = []  # reset buffer
 
-    # Called on every streamed token (if streaming)
-    def on_llm_new_token(self, token, **kwargs):
-        if self.enabled:
-            print(f"[token] {token}", end="")
+    def on_llm_new_token(self, token: str, **kwargs):
+        if not self._is_enabled():
+            return
+        self._tokens.append(token)
+        print(token, end="", flush=True)
 
-    # Called when model returns
     def on_llm_end(self, response, **kwargs):
-        if self.enabled:
-            print("\n=== LLM END ===")
-            print(response)
-            print("================")
+        if not self._is_enabled():
+            return
 
-    # Called when agent calls a tool
+        full_text = "".join(self._tokens)
+
+        print("\n=== LLM END ===")
+        print("Full text:")
+        print(full_text)
+
+        print("\nRaw response object:")
+        pprint.pp(response)
+        print("================")
+        self._tokens = []
+
     def on_tool_start(self, serialized, input_str, **kwargs):
-        if self.enabled:
-            print("=== TOOL CALL ===")
-            print("Input:", input_str)
-            print("=================")
+        if not self._is_enabled():
+            return
+        print("\n=== TOOL CALL ===")
+        print("Input:", input_str)
+        print("=================")
 
     def on_tool_end(self, output, **kwargs):
-        if self.enabled:
-            print("=== TOOL RESULT ===")
-            print(output)
-            print("===================")
+        if not self._is_enabled():
+            return
+        print("=== TOOL RESULT ===")
+        pprint.pp(output)
+        print("===================")
 
 schema_store.add_texts(
     texts=texts,
@@ -128,7 +173,7 @@ schema_store.add_texts(
 )
 
 # --- Tool: same retrieval as minimal, but wrapped for the agent -------------
-@tool(response_format="content_and_artifact")
+@tool(response_format="content")
 def retrieve_context():
     """
     Return schema information for the clinical-trial `patients` table.
@@ -145,7 +190,19 @@ def retrieve_context():
         for doc in retrieved_docs
     )
 
-    return serialized, retrieved_docs
+    return serialized
+
+@tool("python_calc", return_direct=False)
+def python_calc(expression: str) -> str:
+    """Evaluate math problem using numpy in a restricted Python
+    environment. Use this only for numeric post-processing of tool results."""
+    safe_globals = {"__builtins__": {}}
+    try:
+        res = eval("import numpy as np" + expression, safe_globals, {})
+        return str(res)
+    except Exception as e:
+        return f"ERROR: {e}"
+
 
 @tool(response_format="content_and_artifact")
 def run_sql(query: str):
@@ -176,6 +233,7 @@ def run_sql(query: str):
 
     return content, df
 
+
 PLANNER_SYSTEM_PROMPT = """
 You are an analytical SQL planner for a clinical-trial database.
 
@@ -191,10 +249,15 @@ DATABASE:
 - You MUST treat the schema as the ONLY source of truth about columns and
   allowed categorical values.
 
+
 TOOLS YOU MUST USE:
 
 - retrieve_context()
   - Use this to inspect the schema of the patients table.
+
+TOOLS YOU MY USE:
+- python_calc()
+  - USe this to access numpy as np to perform math calculation or transformation
 
 RULES:
 
@@ -207,13 +270,6 @@ RULES:
 
 3. For categorical fields, you MUST use the allowed values exactly as given
    in the schema (including capitalization and spelling).
-   Example:
-     If the schema says:
-       Gender,Patient's biological sex.,"Categorical (String: 'Male', 'Female')."
-     then valid filters include:
-       Gender = 'Male'
-       Gender = 'Female'
-     and you MUST wrap the values in single quotes.
 
 4. You MUST design SQL that uses only the `patients` table.
 
@@ -246,6 +302,7 @@ You MUST output a single JSON object, and NOTHING else, with the keys:
 - columns_used: array of strings with the column names you used
 
 Examples:
+
 
 User question:
   "What’s the average survival time for male ?"
@@ -283,6 +340,10 @@ YOU RECEIVE (as input messages):
 - The user's original question.
 - The SQL query that need to be executed through run_sql tool
 - A brief schema description of the columns involved (optional).
+
+TOOLS YOU MY USE:
+- python_calc()
+  - USe this to access numpy as np to perform math calculation or transformation
 
 
 YOUR JOB:
@@ -332,13 +393,13 @@ Then you should answer:
 debug_handler = DebugHandler(enabled=False)
 
 chat_model = ChatOllama(
-    model="qwen3:4b-instruct",           # or "llama3.1:latest"
+    model="qwen3:4b-instruct",        
     base_url="http://localhost:11434",
     temperature=0.0,
 )
 
-tools = [retrieve_context, run_sql]
-agent = create_agent(chat_model, tools=tools)
+tools = [retrieve_context, run_sql, python_calc]
+agent = create_agent(chat_model, tools=tools, middleware=[])
 
 
 # --- Use the agent -----------------------------------------------------------
@@ -391,7 +452,7 @@ class MyREPL:
             plan = agent.invoke(
                 {
                     "messages": [
-                        {"role": "system", "content": PLANNER_SYSTEM_PROMPT},
+                        {"role": "system", "content": PLANNER_SYSTEM_PROMPT.replace("{csv_string}", csv_string)},
                         {"role": "user", "content": expression},
                     ]
                 },
