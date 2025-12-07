@@ -1,16 +1,16 @@
 import duckdb
 import pandas as pd
 import random
+import os
 from typing import List, Optional
 
 from langchain.tools import tool
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_chroma import Chroma
 from langchain.agents import create_agent
 from langchain_core.callbacks import BaseCallbackHandler
 from langgraph.checkpoint.memory import InMemorySaver
-from prompt_toolkit import PromptSession
-from langchain.agents.middleware import SummarizationMiddleware
+
 
 # ---------------------------------------------------------------------------
 # DEBUG HANDLER
@@ -92,25 +92,20 @@ metadatas = [
 ]
 ids = [row["variable_name"] for _, row in df_definition.iterrows()]
 
-embeddings = OllamaEmbeddings(model="all-minilm:l6-v2")
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")  
+
+embeddings = OpenAIEmbeddings(
+    model="text-embedding-3-small",
+)
+
 schema_store = Chroma(
-    collection_name="patients_schema",
+    collection_name="patients_schema2",
     embedding_function=embeddings,
     persist_directory="./chroma_schema",
 )
 
 schema_store.add_texts(texts=texts, metadatas=metadatas, ids=ids)
 
-#-------------------------------------------
-# 1. Middleware
-#-------------------------------------------
-
-
-summarize = SummarizationMiddleware(
-    model="ollama:llama3.2:latest", 
-    trigger=("tokens", 4000),
-    keep=("messages", 20),
-)
 
 # ---------------------------------------------------------------------------
 # 2. Tools
@@ -320,10 +315,9 @@ REASONING GUIDELINES:
 
 checkpointer = InMemorySaver()
 
-llm = ChatOllama(
-    model="qwen3-4b-local:latest",
-    base_url="http://localhost:11434",
-    temperature=1.0,
+llm = ChatOpenAI(
+    model="gpt-5-nano",   # or gpt-4.1, gpt-4o-mini, etc.
+    temperature=0.1,
 )
 
 tools = [
@@ -340,8 +334,7 @@ agent = create_agent(
     model=llm,
     tools=tools,
     system_prompt=SYSTEM_PROMPT,
-    checkpointer=checkpointer,
-    middleware=[summarize]
+    checkpointer=checkpointer
 )
 
 thread_id = f"planner-{random.random()}"
@@ -349,56 +342,29 @@ thread_id = f"planner-{random.random()}"
 # 5. CLI with debug toggle
 # ---------------------------------------------------------------------------
 
-class MyREPL:
-    def __init__(self, agent):
-        # Keep a persistent environment between commands
-        self.environment = {
-            "__name__": "__repl__",
-            "__builtins__": __builtins__,
-        }
-        self.session = PromptSession() 
-        self.debug = False
-        self.agent = agent
+def main():
+    print("Clinical Trial Agent with Debug + distinct_values.")
+    print("Type 'exit' to quit, or:")
+    print("  Set Debug True")
+    print("  Set Debug False\n")
 
-    def is_python_code(self, expression: str) -> bool:
-        """
-        Very simple heuristic: if it compiles as Python, treat it as Python.
-        Falls back to 'exec' if 'eval' doesn't work.
-        """
+    while True:
         try:
-            compile(expression, "<repl>", "eval")
-            return True
-        except SyntaxError:
-            try:
-                compile(expression, "<repl>", "exec")
-                return True
-            except SyntaxError:
-                return False
+            q = input(">> ").strip()
 
-    def evaluate(self, expression: str):
-        if self.is_python_code(expression):
-            # First try as an expression (so the result can be printed),
-            # then fall back to a statement block.
-            try:
-                code = compile(expression, "<repl>", "eval")
-            except SyntaxError:
-                code = compile(expression, "<repl>", "exec")
-                exec(code, self.environment)
-                return None
-            else:
-                return eval(code, self.environment)
-        elif expression.startswith("Set Debug"):
-            debug = expression.replace('Set Debug ', '', 1).strip()
-            self.debug = debug == 'True'
-            debug_handler.set_enabled(debug == 'True')
-        else:
-            # Non-Python -> forward to the agent (non-streaming)
-            if self.debug:
-                print("[DEBUG] calling for planner agent.invoke()")
-          
+            if q.lower() in ("exit", "quit"):
+                break
+
+            if q.startswith("Set Debug"):
+                # Simple debug toggle
+                val = q.replace("Set Debug", "").strip()
+                enabled = val.lower() == "true"
+                debug_handler.set_enabled(enabled)
+                print(f"[DEBUG MODE] -> {enabled}")
+                continue
 
             result = agent.invoke(
-                {"messages": [{"role": "user", "content": expression}]},
+                {"messages": [{"role": "user", "content": q}]},
                 config={
                     "callbacks": [debug_handler],
                     "configurable": {              
@@ -408,38 +374,18 @@ class MyREPL:
             )
 
             messages = result.get("messages", [])
-            if messages:
-                last_msg = messages[-1]
-                text = getattr(last_msg, "content", str(last_msg))
-            return text
-        
-    def run(self):
-        print("My Custom REPL - type 'exit' or 'quit' (or Ctrl+D) to quit")
+            if not messages:
+                print("No response from agent.")
+                continue
 
-        while True:
-            try:
-                user_input = self.session.prompt(">> ") 
+            print("\n--- Answer ---")
+            print(messages[-1].content)
+            print("--------------\n")
 
-                stripped = user_input.strip()
-                if not stripped:
-                    continue
-
-                if stripped.lower() in {"exit", "quit", "q"}:
-                    break
-
-                result = self.evaluate(user_input)
-                if result is not None:
-                    print(result)
-                    
-
-            except (KeyboardInterrupt, EOFError):
-                print("\nExiting...")
-                break
-            except Exception as e:
-                print(f"Error: {type(e).__name__}: {e}")
+        except KeyboardInterrupt:
+            break
 
 
 if __name__ == "__main__":
-    # You’d pass your existing agent instance here
-    repl = MyREPL(agent)
-    repl.run()
+    main()
+

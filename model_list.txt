@@ -1,0 +1,21 @@
+llama3.2:3b-instruct-q8_0           e410b836fe61    3.4 GB    20 minutes ago     
+
+llama3.2:latest                     a80c4f17acd5    2.0 GB    23 hours ago       
+
+qwen3:4b-instruct                   0edcdef34593    2.5 GB    2 days ago         
+
+llama3.1:8b-instruct-q4_0           42182419e950    4.7 GB    3 days ago         
+
+llama3.1:latest                     46e0c10c039e    4.9 GB    8 days ago         
+
+orieg/gemma3-tools:4b-it-qat        112b9b93b581    4.0 GB    8 days ago         
+
+all-minilm:l6-v2                    1b226e2802db    45 MB     8 days ago         
+
+aliafshar/gemma3-it-qat-tools:1b    9684c551631c    1.0 GB    9 days ago         
+
+orieg/gemma3-tools:1b               b954c157c229    1.0 GB    9 days ago         
+
+gemma3:1b                           8648f39daa8f    815 MB    9 days ago         
+
+gemma2:9b                           ff02c3702f32    5.4 GB    6 weeks ago        
