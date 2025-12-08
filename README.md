@@ -56,6 +56,11 @@ python3 repl_llm_pandasai.py
 python3 repl_llm.py
 ```
 
+# Part 5 ReACT Agent with COT memory and summarization
+```
+python3 multi_tools.py
+``` 
+
 # If you need to increase the RAM 
 ```
 Disable current swap 
