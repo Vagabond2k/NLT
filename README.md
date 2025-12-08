@@ -1,8 +1,22 @@
-# Python Requirements
+# Python Requirements 3.12
 ```
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+python -m spacy download en_core_web_sm
+```
+
+# Python Requirements 3.11 In case to test the PandasAI version of the Agent.
+```
+curl https://pyenv.run | bash
+
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+
+exec $SHELL
+pyenv install 3.11.9
+pyenv local 3.11.9
 ```
 
 # Ollama Requirements

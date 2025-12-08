@@ -321,7 +321,7 @@ REASONING GUIDELINES:
 checkpointer = InMemorySaver()
 
 llm = ChatOllama(
-    model="qwen3-4b-local:latest",
+    model="qwen3:4b-instruct",
     base_url="http://localhost:11434",
     temperature=1.0,
 )
