@@ -108,8 +108,6 @@ schema_store.add_texts(texts=texts, metadatas=metadatas, ids=ids)
 
 summarize = SummarizationMiddleware(
     model="ollama:llama3.2:latest", 
-    trigger=("tokens", 4000),
-    keep=("messages", 20),
 )
 
 # ---------------------------------------------------------------------------

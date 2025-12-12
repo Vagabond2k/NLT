@@ -7,6 +7,8 @@ python -m spacy download en_core_web_sm
 ```
 
 # Python Requirements 3.11 In case to test the PandasAI version of the Agent.
+you can see here pandasAI only works on python < 3.11.9
+Also you have to change and use a dedicated requirements file named requirements_pandasai.txt
 ```
 curl https://pyenv.run | bash
 
@@ -17,6 +19,7 @@ echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 exec $SHELL
 pyenv install 3.11.9
 pyenv local 3.11.9
+pip install -r requirements_pandasai.txt
 ```
 
 # Ollama Requirements
