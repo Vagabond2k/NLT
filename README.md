@@ -4,6 +4,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
+python -m spacy download en_core_web_trf
 ```
 
 # Python Requirements 3.11 In case to test the PandasAI version of the Agent.
@@ -39,6 +40,7 @@ python3 langchain_test.py
 ```
 python3 random_corpus.py 
 python3 named_entities.py
+python3 named_entities_improve.py
 ```
 # Part 3 
 ```

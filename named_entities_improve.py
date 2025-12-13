@@ -11,12 +11,37 @@ with open('corpus.json', 'r') as file:
 
 nlp = spacy.load("en_core_web_trf")
 
+# Put ruler BEFORE ner so the model respects it
+ruler = nlp.add_pipe("entity_ruler", before="ner")
+
+patterns = [
+    # ---- EVENTS ----
+    {"label": "EVENT", "pattern": [{"LOWER": {"REGEX": ".*con$"}}]},   # BakeCon, ComicCon
+    {"label": "EVENT", "pattern": [{"LOWER": "fall"}, {"LOWER": "festival"}]},
+    {"label": "EVENT", "pattern": [{"LOWER": "national"}, {"LOWER": "baking"}, {"LOWER": "championship"}]},
+    {"label": "EVENT", "pattern": [{"LOWER": "national"}, {"LOWER": "sculpture"}, {"LOWER": "competition"}]},
+    {"label": "EVENT", "pattern": [{"LOWER": "state"}, {"LOWER": "of"}, {"LOWER": "the"}, {"LOWER": "city"}, {"LOWER": "address"}]},
+
+    # ---- AWARDS ----
+    {"label": "AWARD", "pattern": [{"LOWER": {"IN": ["bronze", "silver", "gold"]}}, {"LOWER": "award"}]},
+    {"label": "AWARD", "pattern": [{"LOWER": "zenith"}, {"LOWER": "award"}]},
+    {"label": "AWARD", "pattern": [{"LOWER": "golden"}, {"LOWER": "brush"}, {"LOWER": "award"}]},
+
+    # ---- ORGS (common ones from your data) ----
+    {"label": "ORG", "pattern": "Sweet Surrender"},
+    {"label": "ORG", "pattern": "Golden Whisk"},
+    {"label": "ORG", "pattern": "SpaceX"},
+
+    # ---- AI token handling ----
+    {"label": "TECH", "pattern": [{"LOWER": "ai"}]},  # avoids AI→GPE
+]
+
+ruler.add_patterns(patterns)
+
 for item in data:
     doc = nlp(item["corpus"])
     for ent in doc.ents:
-        print("--------------------")
         print(ent.text, ent.start_char, ent.end_char, ent.label_)
-        print("////////////////////")
     print("in doc: ", item["title"])
     print("there were this many entities: ", len(doc.ents))
 
